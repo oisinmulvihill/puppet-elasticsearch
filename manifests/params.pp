@@ -1,7 +1,7 @@
 class elasticsearch::params {
     $version        = '0.90.2'
     $service_repo   = 'https://github.com/elasticsearch/elasticsearch-servicewrapper.git'
-  case $::osfamily {
+  case $operatingsystem {
     /(?i)(centos|redhat)/: {
       $package_file     = "elasticsearch-${version}.noarch.rpm"
       $package_url      = "https://download.elasticsearch.org/elasticsearch/elasticsearch/${package_file}"

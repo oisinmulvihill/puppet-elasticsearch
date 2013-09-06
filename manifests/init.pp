@@ -48,22 +48,38 @@ class elasticsearch(
 
   validate_bool($master_node,$data_node)
 
-  case $::osfamily {
+  case $operatingsystem {
     /(?i)(centos)/: {
       $not_present_already_query = '/bin/rpm -q elasticsearch'
       $INIT_FUNCTIONS = '. /etc/init.d/functions'
-      package {
-        "redhat-lsb":
-          before  => Package['elasticsearch'],
-          ensure => installed,
-      }
+      $EXTRA_FUNCS = '
+log_failure_msg { echo $@ }
+log_failure_msg { echo $@ }
+log_daemon_msg { echo $@ }
+log_end_msg { echo $@ }
+log_end_msg { echo $@ }
+log_progress_msg { echo $@ }
+log_end_msg { echo $@ }
+log_daemon_msg { echo $@ }
+log_progress_msg { echo $@ }
+log_failure_msg { echo $@ }
+log_progress_msg { echo $@ }
+log_end_msg { echo $@ }
+log_success_msg { echo $@ }
+log_success_msg { echo $@ }
+log_success_msg { echo $@ }
+log_success_msg { echo $@ }
+      '
+    }
     /(?i)(redhat)/: {
       $not_present_already_query = '/bin/rpm -q elasticsearch'
       $INIT_FUNCTIONS = '. /lib/lsb/init-functions'
+      $EXTRA_FUNCS = '# -- RED'
     }
     Debian:{
       $not_present_already_query = '/usr/bin/dpkg-query -l elasticsearch'
       $INIT_FUNCTIONS = '. /lib/lsb/init-functions'
+      $EXTRA_FUNCS = '# -- DEB'
     }
     default:{
       fail{"Elasticsearch module not configured for ${::osfamily}.":}
